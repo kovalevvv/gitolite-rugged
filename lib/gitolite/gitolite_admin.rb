@@ -215,7 +215,12 @@ module Gitolite
     # git repo to HEAD
     #
     def reset!
-      repo.reset('origin/master', :hard)
+      begin
+        repo.reset('origin/master', :hard)
+      rescue Rugged::OdbError
+        @repo = repo = clone
+        retry
+      end
     end
 
 
